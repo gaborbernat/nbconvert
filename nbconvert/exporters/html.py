@@ -266,7 +266,7 @@ class HTMLExporter(TemplateExporter):
         yield ("markdown2html", self.markdown2html)
 
     def from_notebook_node(  # type:ignore[override]
-        self, nb: NotebookNode, resources: Optional[dict[str, Any]] = None, **kw: Any
+        self, nb: NotebookNode, resources: dict[str, Any] | None = None, **kw: Any
     ) -> tuple[str, dict[str, Any]]:
         """Convert from notebook node."""
         langinfo = nb.metadata.get("language_info", {})
