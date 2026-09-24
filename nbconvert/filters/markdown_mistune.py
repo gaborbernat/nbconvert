@@ -11,7 +11,7 @@ import os
 from collections.abc import Iterable
 from html import escape
 from re import Match
-from typing import TYPE_CHECKING, Any, ClassVar, Optional, Protocol
+from typing import TYPE_CHECKING, Any, ClassVar, Protocol
 
 import bs4  # type: ignore[import-not-found]
 from pygments import highlight
