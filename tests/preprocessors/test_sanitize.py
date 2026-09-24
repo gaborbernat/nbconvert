@@ -107,6 +107,34 @@ class TestSanitizer(PreprocessorTestsBase):
             '<a href="link">Hi</a>',
         )
 
+    def test_attributes_allowlist_list(self):
+        """A flat attribute list applies to every allowed tag"""
+        preprocessor = self.build_preprocessor()
+
+        preprocessor.attributes = ["title"]
+
+        self.assertEqual(
+            self.preprocess_source(
+                "markdown", '<a href="link" title="t">Hi</a> <em title="e">x</em>', preprocessor
+            ),
+            '<a title="t">Hi</a> <em title="e">x</em>',
+        )
+
+    def test_attributes_allowlist_callable(self):
+        """A predicate decides each attribute by tag, name, and value"""
+        preprocessor = self.build_preprocessor()
+
+        preprocessor.attributes = lambda tag, name, value: name == "title" and value != "drop"
+
+        self.assertEqual(
+            self.preprocess_source(
+                "markdown",
+                '<a href="link" title="keep">Hi</a> <em title="drop">x</em>',
+                preprocessor,
+            ),
+            '<a title="keep">Hi</a> <em>x</em>',
+        )
+
     def test_style_allowlist(self):
         """Test style"""
         preprocessor = self.build_preprocessor()
@@ -126,7 +154,7 @@ class TestSanitizer(PreprocessorTestsBase):
                 "few</em> <script>tags</script>",
                 preprocessor,
             ),
-            '_A_ <em style="color: blue;">few</em> &lt;script&gt;tags&lt;/script&gt;',
+            '_A_ <em style="color: blue">few</em> &lt;script&gt;tags&lt;/script&gt;',
         )
 
     def test_tag_passthrough(self):
